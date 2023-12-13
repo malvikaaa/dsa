@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long 
+ll dfs(int node, vector<vector<int> >& adj,vector<ll>& banana, vector<int>& vis) {
+	vis[node]=1;
+	ll bananas = banana[node];
+	for(int i=0;i<adj[node].size();i++) {
+		int child = adj[node][i];
+		if(vis[child]==0) {
+			bananas += dfs(child, adj,banana, vis);
+		}
+	}
+	return bananas;
+}
+int main() {
+	int t; // no. of testcases
+	cin>>t;
+	while(t--) {
+		int n,m; // no. of nodes and edges
+		cin>>n>>m;
+		vector<vector<int> > adj(n+1); // adjacency list
+		vector<ll> banana(n+1);
+		vector<int> vis(n+1,0);
+		for(int i=0;i<m;i++) {
+			int u,v;
+			cin>>u>>v; // undirectexd edge
+			adj[u].push_back(v);
+			adj[v].push_back(u);
+		}
+		for(int i=1;i<=n;i++) {
+			ll b;
+			cin>>b;
+			banana[i]=b;
+		}
+		ll gold_coins=0;
+		for(int i=1;i<=n;i++) {
+			if(vis[i]==0) {
+				gold_coins = max(gold_coins, dfs(i,adj, banana, vis));
+			}
+		}
+		cout<<gold_coins<<endl;
+	}
+}
