@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main() {
+	int start,goal,floors,up,down;
+	cin>>floors>>start>>goal>>up>>down;
+	vector<int> vis(floors+1,0);
+	// apply bfs now
+	queue<pair<int,int> > q; // pair -> (node/floor , level/no. of buttons pressed)
+	q.push(make_pair(start,0));
+	vis[start]=1;
+	while(!q.empty()) {
+		pair<int,int> curr = q.front();
+		q.pop();
+		int node = curr.first; // floor
+		int lev = curr.second; // level
+		if(node==goal) {
+			cout<<lev<<endl;
+			break;
+		}
+		int child1 = node+up;
+		int child2 = node-down;
+		if(vis[child1]==0 && child1<=floors) {
+			q.push(make_pair(child1,lev+1));
+			vis[child1]=1;
+		}
+		if(vis[child2]==0 && child2>0) {
+			q.push(make_pair(child2,lev+1));
+			vis[child2]=1;
+		}
+	}
+	if(vis[goal]==0) {
+		cout<<"use the stairs"<<endl;
+	}
+	return 0;
+}
