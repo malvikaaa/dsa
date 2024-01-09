@@ -1,0 +1,47 @@
+int memo[100001][3];
+int recurse(vector<vector<int> > &A, int i, int color) {
+    if(memo[i][color]!=-1) {
+        return memo[i][color];
+    }
+    if(i==A.size()) {
+        memo[i][color]=0;
+        return 0;
+    }
+    int min_cost = INT_MAX;
+    for(int j=0;j<3;j++) {
+        if(j!=color) {
+            min_cost = min(min_cost, A[i][color]+recurse(A,i+1,j));
+        }
+    }
+    memo[i][color]=min_cost;
+    return min_cost;
+}
+int Solution::solve(vector<vector<int> > &A) {
+    //recursive method
+    // memset(memo,-1,sizeof(memo)); 
+    // int min_cost = INT_MAX;
+    // for(int c=0;c<3;c++) {
+    //     min_cost = min(min_cost, recurse(A,0,c));
+    // }
+    // return min_cost;
+    
+    // tabulation form of dp
+    int n = A.size();
+    int dp[n+1][3];
+    dp[n][0]=0;
+    dp[n][1]=0;
+    dp[n][2]=0;
+    for(int i=n-1;i>=0;i--) {
+        for(int c=0;c<3;c++) { // c represent color of ith house
+            dp[i][c]=INT_MAX;
+            for(int j=0;j<3;j++) // j represnt color of i+1 th house
+            {
+                if(j!=c) {
+                    dp[i][c]=min(dp[i][c],A[i][c]+dp[i+1][j]);
+                }
+            }
+        }
+    }
+    int ans = min(dp[0][0],min(dp[0][1],dp[0][2]));
+    return ans;
+}
